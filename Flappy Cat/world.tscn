@@ -1,0 +1,214 @@
+[gd_scene load_steps=18 format=3 uid="uid://be22656bix5sn"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_gmvmm"]
+[ext_resource type="Script" path="res://world.gd" id="1_vrxto"]
+[ext_resource type="Texture2D" uid="uid://cg4iyd47nf6n8" path="res://siyah_kedi_jump.png" id="2_1u4e6"]
+[ext_resource type="Texture2D" uid="uid://p3s7bx67d18u" path="res://siyah_kedi_fall.png" id="3_bok01"]
+[ext_resource type="PackedScene" uid="uid://5badbt43ogtv" path="res://lose_particle.tscn" id="4_3blq5"]
+[ext_resource type="Texture2D" uid="uid://n8ecgfx3wini" path="res://Sky-layer.png" id="5_3clad"]
+[ext_resource type="FontFile" uid="uid://b8ce5xbf6rxcn" path="res://DinaRemasterCollection.ttc" id="5_ikwxe"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p2vrj"]
+size = Vector2(14, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kkjtj"]
+size = Vector2(14.1, 13.1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ey8sd"]
+size = Vector2(20, 333)
+
+[sub_resource type="LabelSettings" id="LabelSettings_nff1n"]
+font = ExtResource("5_ikwxe")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nc5oc"]
+size = Vector2(192, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q2fvm"]
+bg_color = Color(0.133333, 0.12549, 0.203922, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(1, 1, 1, 0.6)
+shadow_size = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_ap58q"]
+font = ExtResource("5_ikwxe")
+
+[sub_resource type="LabelSettings" id="LabelSettings_hbp13"]
+font = ExtResource("5_ikwxe")
+
+[sub_resource type="Animation" id="Animation_f5d4x"]
+resource_name = "popup"
+length = 11.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.3, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vnyej"]
+_data = {
+"popup": SubResource("Animation_f5d4x")
+}
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_vrxto")
+
+[node name="PlayerNode" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="PlayerNode"]
+script = ExtResource("1_gmvmm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerNode/Player"]
+position = Vector2(-1, 0.5)
+scale = Vector2(1.4, 1.4)
+shape = SubResource("RectangleShape2D_p2vrj")
+
+[node name="jump" type="Sprite2D" parent="PlayerNode/Player"]
+texture_filter = 1
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("2_1u4e6")
+
+[node name="fall" type="Sprite2D" parent="PlayerNode/Player"]
+texture_filter = 1
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("3_bok01")
+
+[node name="Detect" type="Area2D" parent="PlayerNode/Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerNode/Player/Detect"]
+position = Vector2(-1, 0.5)
+scale = Vector2(1.4, 1.4)
+shape = SubResource("RectangleShape2D_kkjtj")
+
+[node name="Resetter" type="Area2D" parent="PlayerNode/Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerNode/Player/Resetter"]
+position = Vector2(-160, 0.5)
+shape = SubResource("RectangleShape2D_ey8sd")
+
+[node name="Timer" type="Timer" parent="PlayerNode/Player"]
+wait_time = 1.5
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+texture_filter = 1
+zoom = Vector2(3, 3)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -5
+follow_viewport_enabled = true
+
+[node name="Background" type="Sprite2D" parent="CanvasLayer"]
+z_index = -5
+position = Vector2(0, 21)
+scale = Vector2(0.333, 0.333)
+texture = ExtResource("5_3clad")
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+texture_filter = 1
+offset_left = -20.0
+offset_top = -150.0
+offset_right = 20.0
+offset_bottom = -127.0
+label_settings = SubResource("LabelSettings_nff1n")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="Walls" type="CollisionShape2D" parent="Walls"]
+position = Vector2(0, 172)
+shape = SubResource("RectangleShape2D_nc5oc")
+
+[node name="lose_particle" parent="." instance=ExtResource("4_3blq5")]
+scale = Vector2(1.4, 1.4)
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+top_level = true
+offset_left = -45.0
+offset_top = -64.0
+offset_right = 45.0
+offset_bottom = 50.0
+pivot_offset = Vector2(45, 57)
+theme_override_styles/panel = SubResource("StyleBoxFlat_q2fvm")
+
+[node name="ScoreLabel" type="Label" parent="Panel"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 7.0
+offset_top = 1.0
+offset_right = 87.0
+offset_bottom = 36.0
+text = "SCORE: "
+label_settings = SubResource("LabelSettings_ap58q")
+vertical_alignment = 1
+
+[node name="MenuButton" type="Button" parent="Panel"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 13.0
+offset_top = 45.0
+offset_right = 77.0
+offset_bottom = 64.0
+
+[node name="Label" type="Label" parent="Panel/MenuButton"]
+texture_filter = 1
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 20.0
+text = "MENU"
+label_settings = SubResource("LabelSettings_hbp13")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="Button" parent="Panel"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 5.0
+offset_top = 69.0
+offset_right = 85.0
+offset_bottom = 104.0
+
+[node name="Label" type="Label" parent="Panel/RestartButton"]
+texture_filter = 1
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 35.0
+text = "RESTART"
+label_settings = SubResource("LabelSettings_ap58q")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BestScoreLabel" type="Label" parent="Panel"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 7.0
+offset_top = 18.0
+offset_right = 87.0
+offset_bottom = 53.0
+text = "BEST: "
+label_settings = SubResource("LabelSettings_ap58q")
+vertical_alignment = 1
+
+[node name="PopupAnimation" type="AnimationPlayer" parent="Panel"]
+libraries = {
+"": SubResource("AnimationLibrary_vnyej")
+}
+
+[connection signal="area_entered" from="PlayerNode/Player/Detect" to="PlayerNode/Player" method="_on_detect_area_entered"]
+[connection signal="body_entered" from="PlayerNode/Player/Detect" to="PlayerNode/Player" method="_on_detect_body_entered"]
+[connection signal="body_entered" from="PlayerNode/Player/Resetter" to="PlayerNode/Player" method="_on_resetter_body_entered"]
+[connection signal="button_up" from="Panel/MenuButton" to="." method="_on_menu_button_button_up"]
+[connection signal="button_up" from="Panel/RestartButton" to="." method="_on_restart_button_button_up"]

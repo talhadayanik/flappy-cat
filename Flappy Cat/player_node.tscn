@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://4p737nlo7aw8"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_kn35h"]
+[ext_resource type="Texture2D" uid="uid://cg4iyd47nf6n8" path="res://siyah_kedi_jump.png" id="2_3rmu6"]
+[ext_resource type="Texture2D" uid="uid://p3s7bx67d18u" path="res://siyah_kedi_fall.png" id="3_bo5nm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p2vrj"]
+size = Vector2(14, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3g2vx"]
+size = Vector2(14.5, 14.5)
+
+[node name="PlayerNode" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("1_kn35h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(-1, 1)
+shape = SubResource("RectangleShape2D_p2vrj")
+
+[node name="jump" type="Sprite2D" parent="Player"]
+visible = false
+texture_filter = 1
+texture = ExtResource("2_3rmu6")
+
+[node name="fall" type="Sprite2D" parent="Player"]
+visible = false
+texture_filter = 1
+texture = ExtResource("3_bo5nm")
+
+[node name="Detect" type="Area2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Detect"]
+position = Vector2(-0.9375, 1.125)
+shape = SubResource("RectangleShape2D_3g2vx")
